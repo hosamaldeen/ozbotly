@@ -42,10 +42,8 @@
 </head>
 
 <body style='height:100%' >
-	<p id="deviceProperties">Loading device properties...</p>
-	<img class='preload' src="img/logo.png" style="margin: 20% auto 0;display: block;">
+	<img class='preload logo' src="img/logo.png" style="margin: 20% auto 0;display: block;">
     <img class='preload' src="img/loader.gif" style="width: 200px;margin: auto;display: block;">
-	<h1  class='preload' style='text-align: center;' >This application Requires Internet</h1>
 	<iframe style='display:none;width:100%;height:100%;border:0' 
 	src='http://ozbotly.com/' ></iframe>
  
@@ -54,73 +52,29 @@
 	
 	<script>
 	$(window).on('load', function(){
-		$('.preload').remove();
-		$('iframe').show();
-		var Authority ='b8cd193e60cad541287dfae77bd739d0';
-		var internet;
-		document.addEventListener('online',online,false);
-		document.addEventListener('offline',offline,false);
-
-
-		function online(){
-
-		  internet=true;
-		}
-
-		function offline(){
-		 internet=false;
-		}
-
-		if(internet){
-
-		console.log('yes');
-
-		}else{
-
-		alert('no');
-		}
 		
-		if(navigator.connection.type==0)
+		
+		if(navigator.connection.type==0 || navigator.connection.type=='none')
 		{
+			$('.preload').remove();
 			alert('This application requires internet. Please connect to the internet.');
+			navigator.app.exitApp();
 
-		}
-		else if(navigator.connection.type=='none')
-		{
-			alert('This application requires internet. Please connect to the internet.');
 
 		}
 		else
 		{
-			// alert('yes')
+			$('.preload').remove();
+			$('iframe').show();
 		}
-		
-		 //
-    document.addEventListener("deviceready", onDeviceReady, false);
-
-    // device APIs are available
-    //
-    function onDeviceReady() {
-        var element = document.getElementById('deviceProperties');
-        element.innerHTML = 'Device Model: '    + device.model    + '<br />' +
-                            'Device Cordova: '  + device.cordova  + '<br />' +
-                            'Device Platform: ' + device.platform + '<br />' +
-                            'Device UUID: '     + device.uuid     + '<br />' +
-                            'Device Version: '  + device.version  + '<br />';
-    
+	
 		$.ajax({
-		  method: "POST",
-		  beforeSend: function(request) {
-			request.setRequestHeader("Authority", Authority);
-		  },
-		  url: "http://ozbotly.com/api/login",
-		  data: { name: "John", location: "Boston" }
+		  method: "GET",
+		  url: "http://ozbotly.com/api/login?device="+device.platform+"&uuid="+device.uuid,
 		})
 		.done(function( msg ) {
-			alert( "Data Saved: " + msg );
-		});
-	}
 		
+		});
 	});
 	
 	</script>
